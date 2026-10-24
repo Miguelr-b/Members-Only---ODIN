@@ -2,7 +2,9 @@ const db = require("../models/queries");
 const { body, validationResult } = require("express-validator");
 const passport = require("./config/passport");
 
-
+async function getRegister(req, res) {
+    return res.render("sign-up-form", );
+}
 async function register(req, res, next) {
     try {
         const errors = validationResult(req);
@@ -27,7 +29,32 @@ async function register(req, res, next) {
     }
 }
 
+async function getLogin(req, res) {
+    return res.render("login");
+}
+
+async function login(req, res) {
+    return passport.authenticate("local", {
+            successRedirect: "/",
+            failureRedirect: "/login",
+        })
+}
+g
+async function logout(req, res, next) {
+    req.logout(err => {
+        if (err) return next(err);
+        res.redirect("/");
+    })
+}
+
 
 
 module.exports = {
+    getRegister,
+    register,
+
+    getLogin,
+    login,
+
+    logout,
 };
