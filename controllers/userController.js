@@ -3,43 +3,40 @@ const { body, validationResult } = require("express-validator");
 const passport = require("./config/passport");
 
 async function getRegister(req, res) {
-    return res.render("sign-up-form", );
+    return res.render("register", { errors: [], values: {} });
 }
-async function register(req, res, next) {
-    try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.render("pages/auth", {
-                route: "register",
-                errors: errors.array(),
-            });
-        }
-        else {
-            const {username, name, email, password} = req.body;
-            const hashed = await bcrypt.hash(password, 10);
-            await db.postSignUp({ username, name, email, password: hashed, membership: "common" });
 
-            return res.render("pages/auth", {
-                route: "register",
-                success: true,
-            });
-        }
-    } catch (err) {
-        next(err);
+async function register(req, res) {
+  const { username, name, email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+
+  try {
+    await db.postSignUp({ username, name, email, password: hashed, membership: "common" });
+  } catch (err) {
+    if (err.code === "23505") { 
+      return res.status(400).render("register", {
+        errors: [{ msg: "Username or email" }],
+        values: { username, name, email },
+      });
     }
+    throw err;
+  }
+
+  res.redirect("/login");
 }
 
-async function getLogin(req, res) {
-    return res.render("login");
+function getLogin(req, res) {
+  const messages = req.session.messages || [];
+  req.session.messages = [];
+  res.render("login", { messages });
 }
 
-async function login(req, res) {
-    return passport.authenticate("local", {
-            successRedirect: "/",
-            failureRedirect: "/login",
-        })
-}
-g
+const login = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/login",
+  failureMessage: true,
+});
+
 async function logout(req, res, next) {
     req.logout(err => {
         if (err) return next(err);

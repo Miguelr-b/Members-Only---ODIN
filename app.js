@@ -19,23 +19,6 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
-// routes
-app.get("/", (req, res) => res.render("index"));
-
-app.get("/sign-up", (req, res) => res.render("sign-up-form"));
-
-// queries + controllers
-app.post("/sign-up", async (req, res, next) => {
-  try {
-    await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-      req.body.username,
-      req.body.password,
-    ]);
-    res.redirect("/");
-  } catch(err) {
-    return next(err);
-  }
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {

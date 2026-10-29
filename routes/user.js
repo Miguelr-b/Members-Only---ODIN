@@ -7,7 +7,8 @@ userRouter.get("/sign-up", userController.getRegister);
 userRouter.get("/login", userController.getLogin);
 
 userRouter.post("/login", userController.login)
-userRouter.post("/sign-up", userController.register )
+router.post("/register", registerRules, handleRegisterErrors, userController.register);
+
 
 
 
