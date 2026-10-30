@@ -7,7 +7,7 @@ const pool = require("./pool");
 // USER
 async function getUserById(id) {
     const { rows } = await pool.query( 
-      `SELECT * FROM user WHERE id = $1`,[id]
+      `SELECT * FROM users WHERE id = $1`,[id]
     );
 
     return rows[0];
@@ -15,14 +15,14 @@ async function getUserById(id) {
 
 async function getByUsername(username) {
     const { rows } = await pool.query( 
-      `SELECT * FROM user WHERE username = $1`,[username]
+      `SELECT * FROM users WHERE username = $1`,[username]
     );
 
     return rows[0];
 }
 
 async function postSignUp(user) {
-  await pool.query("INSERT INTO user (username, name, email, password, membership) VALUES ($1, $2, $3, $4, $5)", 
+  await pool.query("INSERT INTO users (username, name, email, password, membership) VALUES ($1, $2, $3, $4, $5)", 
     [ user.username, 
       user.name, 
       user.email, 
@@ -34,7 +34,7 @@ async function postSignUp(user) {
 async function updateUser(id, user) {
 
   const { rowCount } = await pool.query(
-    `UPDATE user
+    `UPDATE users
      SET username = $1,
          name = $2,
          email = $3,
@@ -58,7 +58,7 @@ async function updateUser(id, user) {
 
 async function deleteUser(id) {
   const { rowCount } = await pool.query(
-    "DELETE FROM user WHERE id = $1",
+    "DELETE FROM users WHERE id = $1",
     [id]
   );
 
@@ -70,7 +70,7 @@ async function deleteUser(id) {
 
 async function giveMemberShip(id, user) {
   const { rowCount } = await pool.query(
-    `UPDATE user
+    `UPDATE users
      SET membership = 'member',
      WHERE id = $1`,
     [id,]

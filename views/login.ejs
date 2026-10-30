@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+
+  <% if (locals.messages && messages.length) { %>
+    <ul style="color: red;">
+      <% messages.forEach(m => { %>
+        <li><%= m %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form action="/user/login" method="POST">
+    <label>Username <input name="username" required></label><br>
+    <label>Senha <input name="password" type="password" required></label><br>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <p>Não tem conta? <a href="/user/register">Cadastrar</a></p>
+
+  <% if (locals.user) { %>
+    <form action="/logout" method="POST"><button>Sair</button></form>
+  <% } %>
+</body>
+</html>
